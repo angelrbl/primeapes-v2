@@ -1,7 +1,12 @@
 import flet as ft
+import os
 
 
 def main(page: ft.Page):
+    if os.getenv("PRIMEAPES_DEV"):
+        page.window.width = 390
+        page.window.height = 844
+
     counter = ft.Text("0", size=50, data=0)
 
     def increment_click(e: ft.Event[ft.FloatingActionButton]):
