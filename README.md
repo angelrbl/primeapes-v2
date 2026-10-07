@@ -1,69 +1,74 @@
-# PrimeapesV2 app
+# PrimeApes 🦍
 
-## Run the app
+Aplicación para **planificar y registrar tus entrenamientos**: base de ejercicios, series, historial y planificación por ciclos. Funciona **sin conexión**: tus datos se guardan en una base de datos SQLite dentro del propio dispositivo.
 
-### uv
+Esta es la reescritura de [primeapes-app](https://github.com/angelrbl/primeapes-app) (Streamlit), pensada desde cero para móvil.
 
-Run as a desktop app:
+## Tecnologías
 
-```bash
-uv run flet run
+| Área | Herramienta |
+|---|---|
+| Interfaz | [Flet](https://flet.dev) (Python) |
+| Base de datos | SQLite + SQLAlchemy |
+| Tests | pytest |
+
+
+## Puesta en marcha
+
+```powershell
+git clone https://github.com/angelrbl/primeapes-v2.git
+cd primeapes-v2
+python -m venv .venv
+.venv\Scripts\activate
+pip install flet
+pip install -r requirements-dev.txt
 ```
 
-Run as a web app:
+> Si PowerShell no deja activar el entorno virtual, ejecuta una vez
+> `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`.
 
-```bash
-uv run flet run --web
+### Ejecutar la app
+
+```powershell
+flet run
 ```
 
-For more details on running the app, refer to the [Getting Started Guide](https://flet.dev/docs/).
+### Modo desarrollo (ventana con tamaño de móvil y recarga automática)
 
-## Build the app
-
-### Android
-
-```bash
-flet build apk -v
+```powershell
+$env:PRIMEAPES_DEV=1; flet run -d -r
 ```
 
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://flet.dev/docs/publish/android/).
+Con `PRIMEAPES_DEV` activo, la ventana se abre con proporciones de móvil (390×844) y la base de datos se guarda en `storage/data/`. Al empaquetar la app, usa la carpeta de almacenamiento que Flet reserva para ella.
+También se puede añadir como variable de entorno en el archivo .env.
 
-### iOS
+## Tests y calidad del código
 
-```bash
-flet build ipa -v
+```powershell
+pytest
 ```
 
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://flet.dev/docs/publish/ios/).
+## Estructura del proyecto
 
-### macOS
-
-```bash
-flet build macos -v
+```
+src/
+├── main.py          # Punto de entrada
+├── core/            # Configuración y conexión a SQLite
+├── models/          # Modelos SQLAlchemy
+├── services/        # Lógica de negocio (sin dependencias de Flet)
+├── views/           # Pantallas
+└── components/      # Componentes de interfaz reutilizables
+└── assets/          # Assets a usar en la app
+tests/               # Tests de servicios y base de datos
+storage/             # Datos locales de desarrollo (no se sube a Git)
 ```
 
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://flet.dev/docs/publish/macos/).
+## Flujo de trabajo
 
-### Linux
+- `main` siempre está estable.
+- Cada tarea parte de un issue y se desarrolla en su propia rama (`feat/…`, `fix/…`, `chore/…`).
+- Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/).
 
-```bash
-flet build linux -v
-```
+## Licencia
 
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://flet.dev/docs/publish/linux/).
-
-### Windows
-
-```bash
-flet build windows -v
-```
-
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
-
-### Web
-
-```bash
-flet build web -v
-```
-
-For more details on building Web app, refer to the [Web Packaging Guide](https://flet.dev/docs/publish/web/).
+Pendiente de definir.
