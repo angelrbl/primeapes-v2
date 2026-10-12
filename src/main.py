@@ -1,5 +1,6 @@
 import flet as ft
 import os
+from core.db import init_db
 
 
 def main(page: ft.Page):
@@ -28,4 +29,5 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
+    init_db()
     ft.run(main)
