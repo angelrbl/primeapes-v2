@@ -30,3 +30,4 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     init_db()
+    ft.run(main)
