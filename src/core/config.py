@@ -1,18 +1,22 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DB_FILENAME = "primeapes.db"
 
-ENV_PATH = BASE_DIR / ".env"
-load_dotenv(dotenv_path=ENV_PATH)
 
-STORAGE_SECRET = os.getenv("STORAGE_SECRET")
+def data_dir() -> Path:
+    base = os.getenv("FLET_APP_STORAGE_DATA")
+    folder = Path(base) if base else PROJECT_ROOT / "storage" / "data"
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
 
-DATA_DIR = BASE_DIR / "storage" / "data"
-DATA_DIR.mkdir(exist_ok=True)
 
-DEFAULT_DB_PATH =f"sqlite:///{DATA_DIR / 'primeapes.db'}"
-DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_PATH)
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+def db_path() -> Path:
+    return data_dir() / DB_FILENAME
+
+
+def database_url() -> str:
+    """URL de SQLAlchemy. Se puede sobrescribir, por ejemplo en los tests."""
+    override = os.getenv("PRIMEAPES_DATABASE_URL")
+    return override or f"sqlite:///{db_path().as_posix()}"
